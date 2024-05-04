@@ -1,5 +1,9 @@
 # Codecepticon Changelog
 
+## v1.2.3
+
+* `[Update]` Update copyright & links, added workflows to repo.
+
 ## v1.2.2
 
 * `[Update]` Removed `BouncyCastle` dependency, now certificates are generated using native .NET functionality.

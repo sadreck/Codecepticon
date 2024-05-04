@@ -53,7 +53,7 @@ Codecepticon allows you to obfuscate and rewrite code, but also provides feature
 
 ### Open and Compile
 
-Open Codecepticon, wait until all NuGet packages are downloaded and then build the solution.
+Open Codecepticon, wait until all NuGet packages are downloaded and then build the solution. You can also download a pre-compiled `Release`.
 
 ## Using Codecepticon
 
