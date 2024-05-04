@@ -1,2 +1,2 @@
-Codecepticon v%%_VERSION_%% [ Accenture Security ]
-- For more information visit https://github.com/Accenture/Codecepticon
+Codecepticon v%%_VERSION_%% [ Pavel Tsakalidis ]
+- For more information visit https://github.com/sadreck/Codecepticon

@@ -1,0 +1,63 @@
+name: Create Release
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*.*.*"
+
+env:
+  SOLUTION_FILE_PATH: .
+
+  BUILD_CONFIGURATION: Release
+  BUILD_OUTPUT_PATH: Build
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.CODECEPTICON_TOKEN }}
+
+    - name: Add MSBuild to PATH
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Restore NuGet packages
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      run: nuget restore ${{env.SOLUTION_FILE_PATH}}
+
+    - name: Build
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} /p:OutputPath=../${{env.BUILD_OUTPUT_PATH}} ${{env.SOLUTION_FILE_PATH}}
+
+    - name: Delete .config file
+      run: Remove-Item -Path ${{env.BUILD_OUTPUT_PATH}}/Codecepticon.exe.config
+
+    - name: Set release filename
+      run: echo "RELEASE_FILENAME=Codecepticon-${{ github.ref_name }}.zip" >> $env:GITHUB_ENV
+
+    - name: Compress release
+      run: Compress-Archive -Path ${{env.BUILD_OUTPUT_PATH}}/* -Destination ${{ env.RELEASE_FILENAME }}
+
+    - name: Get file hash
+      run: |
+        $hash = Get-FileHash -Algorithm SHA256 ${{ env.RELEASE_FILENAME }} | select -exp Hash
+        echo "FILE_HASH=$hash" >> $env:GITHUB_ENV
+
+    - name: Release
+      uses: softprops/action-gh-release@v2
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: ${{ env.RELEASE_FILENAME }}
+        name: Codecepticon-${{ github.ref_name }}
+        body: |
+          Archive SHA256: `${{ env.FILE_HASH }}`
+
+          For more details see `CHANGELOG.md`.
+        token: ${{ secrets.CODECEPTICON_TOKEN }}

@@ -1,4 +1,4 @@
-# Codecepticon ![version](https://img.shields.io/github/v/tag/Accenture/Codecepticon?label=version&style=flat-square)
+# Codecepticon ![version](https://img.shields.io/github/v/tag/sadreck/Codecepticon?label=version&style=flat-square)
 
 ## Table of Contents
 
